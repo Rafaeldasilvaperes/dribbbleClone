@@ -2,9 +2,10 @@ import { NavLinks } from '@/constants'
 import Image from 'next/image'
 import Link from 'next/link'
 import AuthProviders from './AuthProviders';
+import { getCurrentUser } from '@/lib/session';
 
-const Navbar = () => {
-  const session = {};
+const Navbar = async () => {
+  const session = await getCurrentUser();
 
   return (
     <nav className='flexBetween navbar'>
@@ -20,24 +21,34 @@ const Navbar = () => {
         <ul className='xl:flex hidden text-small gap-7'>
           {NavLinks.map((link) => (
             <Link href={link.href} 
-            key={link.key}>
+            key={link.key}
+            className='hover:text-violet-600'>
               {link.text}
             </Link>
           ))}
         </ul>
       </div>
       <div className='flexCenter gap-4'>
-        {session?(
+        {session?.user ?(
           <>
-          UserPhoto
-          <Link href='/create-project'>
-          Share Work
-          </Link>
+            {session?.user?.image
+            && (<Image 
+              src={session.user.image}
+              width={40}
+              height={40}
+              className='rounded-full'
+              alt={session.user.name}/>
+            )}
+            
+            <Link href='/create-project'>
+            Share Work
+            </Link>
           </>
+          
         ) : (
           <AuthProviders></AuthProviders>
         )}
-
+        
       </div>
     </nav>
   )
