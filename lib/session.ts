@@ -18,19 +18,20 @@ export const authOptions: NextAuthOptions = {
   ],
   jwt:{
     encode: async ({secret, token}) => {
-      console.log(token)
+      console.log("ENCODE TOKEN IN::>>",token)
       const encodedToken = jsonwebtoken.sign({
         ...token,
         iss: 'grafbase',
         exp: Math.floor(Date.now() / 1000) + 60 * 60
       }, secret)
 
+      console.log("ENCODED TOKEN OUT::>>", encodedToken)
       return encodedToken;
     },
     decode: async ({secret, token}) => {
-      console.log(token)
+      console.log("DECODE TOKEN IN::>>",token)
       const decodedToken = jsonwebtoken.verify(token!, secret) as JWT;
-
+      console.log("DECODED TOKEN OUT::>>", decodedToken)
       return decodedToken;
     }
   },

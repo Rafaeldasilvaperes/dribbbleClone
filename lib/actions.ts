@@ -17,12 +17,12 @@ const makeGraphQLRequest = async (query: string, variables = {}) => {
     throw error;
   }
 }
-
+// GET ONE USER
 export const getUser = (email: string) => {
   client.setHeader('x-api-key', apiKey);
   return makeGraphQLRequest(getUserQuery, { email });
 }
-
+// CREATE ONE USER
 export const createUser = (name: string, email: string, avatarUrl: string) => {
   client.setHeader('x-api-key', apiKey);
   const variables = {

@@ -145,7 +145,7 @@ body {
 
 /* Project Form */
 .form {
-  @apply flex-col w-full lg:pt-24 pt-12 gap-10 text-lg max-w-5xl mx-auto;
+  @apply flex-col w-full lg:pt-24 pt-12 gap-8 text-lg max-w-5xl mx-auto;
 }
 
 .form_image-container {
