@@ -13,7 +13,7 @@ const FormField = ({ type, title, state, placeholder, isTextArea, setState }: Pr
       <label htmlFor="" className="w-full text-gray-100">
         {title}
       </label>
-
+      
       {isTextArea ? (
         <textarea 
           placeholder={placeholder}

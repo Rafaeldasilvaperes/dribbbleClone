@@ -2,8 +2,11 @@
 
 import { SessionInterface } from "@/common.types";
 import Image from "next/image";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import FormField from "./FormField";
+import { categoryFilters } from "@/constants";
+import CustomMenu from "./CustomMenu";
+import Button from "./Button";
 
 type Props = {
   type: string,
@@ -12,18 +15,40 @@ type Props = {
 
 const ProjectForm = ({ type, session }: Props) => {
   const handleFormSubmit = (e: React.FormEvent) =>{};
-  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {};
-  const handleStateChange = (fieldName: string, value: string) => {};
 
 
-  const image = null;
-  const form = {
-    image: '',
-    title: '',
-    description: '',
-    liveSiteUrl: '',
-    githubUrl: '',
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault(); // avoid reload on the page
+    const file = e.target.files?.[0];
+    if(!file) return;
+
+    if(!file.type.includes('image')){
+      return alert('Please update an image file!')      
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const result = reader.result as string;
+      handleStateChange('image', result);
+    }
   };
+
+  const handleStateChange: any = (fieldName: string, value: string) => {
+    setform((prevState) => ({
+      ...prevState, [fieldName]: value
+    }))
+  };
+
+ const [isSubmitting, setisSubmitting] = useState(false);
+ const [form, setform] = useState({
+  title: '',
+  description: '',
+  image: '',
+  liveSiteUrl:'',
+  githubUrl: '',
+  category: '',
+ })
 
   return (
     <form
@@ -79,10 +104,28 @@ const ProjectForm = ({ type, session }: Props) => {
         placeholder="https://github.com/yourNameHere"
         setState={(value: string) => handleStateChange('githubUrl',value)}
       />
-      {/* CustomInput Category for later... */}
+      
+      <CustomMenu 
+        title='Category'
+        state={form.category}
+        filters={categoryFilters}
+        setState={(value) => handleStateChange('category', value)}
+      />
 
       <div className="flexStart w-full">
-        <button className="px-10 py-2 bg-violet-500 text-white rounded-sm hover:bg-violet-800 active:bg-violet-300 active:text-black-100">Create</button>
+
+          <Button            
+            title={
+              isSubmitting 
+              ? `${type === 'create' ? 'Creating':'Editing'}` 
+              : `${type === 'create' ? 'Create' : 'Edit'}`}
+            type='submit'
+            leftIcon={isSubmitting ? "" : '/plus.svg'}
+            // rightIcon={isSubmitting ? "" : '/plus.svg'}
+            isSubmitting={isSubmitting} />
+
+        {/* <button className="px-10 py-2 bg-violet-500 text-white rounded-sm hover:bg-violet-800 active:bg-violet-300 active:text-black-100">Create</button> */}
+
       </div>
     </form>
   )
