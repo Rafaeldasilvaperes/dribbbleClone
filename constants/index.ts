@@ -19,7 +19,8 @@ export const categoryFilters = [
   "Cybersecurity",
   "Blockchain",
   "E-commerce",
-  "Chatbots"
+  "Chatbots",
+  "Habitation"
 ]
 
 export const footerLinks = [

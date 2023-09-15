@@ -4,7 +4,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Flexibble',
-  description: 'Showcase and discover remarkble developer projects',
+  description: 'Showcase and discover remarkable developer projects',
 }
 
 export default function RootLayout(

@@ -14,6 +14,7 @@ export const Modal = ({ children }:{children: ReactNode}) => {
     router.push('/')
   }, [router]);
 
+  // toggle modal off
   const handleClick = useCallback((e: React.MouseEvent) => {
     if((e.target === overlay.current) && onDismiss){
       onDismiss();

@@ -1,4 +1,5 @@
-import { createUserMutation, getUserQuery } from "@/graphql";
+import { ProjectForm } from "@/common.types";
+import { createProjectMutation, createUserMutation, getProjectByIdQuery, getUserQuery, projectsQuery } from "@/graphql";
 import { GraphQLClient } from "graphql-request";
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -30,7 +31,64 @@ export const createUser = (name: string, email: string, avatarUrl: string) => {
       name, email, avatarUrl
     }
   }
-
-  return makeGraphQLRequest(createUserMutation, variables)
-
 }
+// GET THE TOKEN
+export const fetchToken = async () => {
+  try {
+    // this path is were nextauth publishes the tokens automatically
+    const response = await fetch(`${serverUrl}/api/auth/token`);
+    
+    return response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+// UPLOAD THE IMAGE
+export const uploadImage = async (imagePath: string) => {
+  try {
+    const response = await fetch(`${serverUrl}/api/upload`, {
+      method: 'POST',
+      body: JSON.stringify({ path: imagePath })
+    })
+
+    return response.json();
+
+  } catch (error) {
+
+    throw error;
+    
+  }
+}
+// CREATE ONE NEW PROJECT
+  export const createNewProject = async (form: ProjectForm, creatorId: string, token: string) => {
+    const imageUrl = await uploadImage(form.image);
+
+    if(imageUrl.url){
+      client.setHeader("Authorization", `Bearer ${token}`);
+      const variables = {
+        input: {
+          ...form,
+          image: imageUrl.url,
+          createdBy: {
+            link: creatorId
+          }
+        }
+      }
+
+      return makeGraphQLRequest(createProjectMutation, variables)
+    }
+  }
+
+  export const fetchAllProjects = async (category?: string, endcursor?: string) => {
+
+    client.setHeader('x-api-key', apiKey);
+
+    return makeGraphQLRequest(projectsQuery, { category, endcursor });
+
+  }
+
+  // GET ONE PROJECT DETAILS by ID for project page
+  export const getProjectDetails = (id: string) => {
+    client.setHeader('x-api-key', apiKey);
+    return makeGraphQLRequest(getProjectByIdQuery, { id })
+  }
