@@ -10,6 +10,7 @@ import { SessionInterface } from "@/common.types";
 
 const ProfileMenu = ({ session }: { session: SessionInterface }) => {
     const [openModal, setOpenModal] = useState(false);
+    console.log("Session ID"+session.user.id!);
 
     return (
         <div className="flexCenter z-10 flex-col relative">
@@ -23,9 +24,10 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
                             className="rounded-full"
                             alt="user profile image"
                         />
+                        
                     )}
                 </Menu.Button>
-
+                
                 <Transition
                     show={openModal}
                     as={Fragment}
@@ -75,6 +77,7 @@ const ProfileMenu = ({ session }: { session: SessionInterface }) => {
                     </Menu.Items>
                 </Transition>
             </Menu>
+            
         </div>
     )
 }

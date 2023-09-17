@@ -19,7 +19,8 @@ const Button = ({ title, leftIcon, rightIcon, handleClick, isSubmitting, type, b
       disabled={isSubmitting}      
       className={`flex items-center justify-between px-5 py-2
       ${textColor || 'text-white'}
-      ${isSubmitting ? '' : bgColor || 'bg-violet-500'}  max-md:w-full rounded-sm hover:bg-violet-800 active:bg-violet-300 active:text-black-100
+      ${isSubmitting ? '' : bgColor || 'bg-violet-500'}  max-md:w-full rounded-sm hover:bg-violet-800 active:bg-violet-400
+      disabled:bg-gray
       `}
 
       // px-10 py-2 bg-violet-500 text-white rounded-sm hover:bg-violet-800 active:bg-violet-300 active:text-black-100

@@ -25,13 +25,13 @@ export const authOptions: NextAuthOptions = {
         exp: Math.floor(Date.now() / 1000) + 60 * 60
       }, secret)
 
-      console.log("ENCODED TOKEN OUT::>>", encodedToken)
+      //console.log("ENCODED TOKEN OUT::>>", encodedToken)
       return encodedToken;
     },
     decode: async ({secret, token}) => {
-      console.log("DECODE TOKEN IN::>>",token)
+      //console.log("DECODE TOKEN IN::>>",token)
       const decodedToken = jsonwebtoken.verify(token!, secret) as JWT;
-      console.log("DECODED TOKEN OUT::>>", decodedToken)
+      //console.log("DECODED TOKEN OUT::>>", decodedToken)
       return decodedToken;
     }
   },
