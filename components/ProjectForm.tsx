@@ -1,22 +1,35 @@
 "use client"
 
-import { SessionInterface } from "@/common.types";
+import { ProjectInterface, SessionInterface } from "@/common.types";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import FormField from "./FormField";
 import { categoryFilters } from "@/constants";
 import CustomMenu from "./CustomMenu";
 import Button from "./Button";
-import { createNewProject, fetchToken } from "@/lib/actions";
+import { createNewProject, fetchToken, updateProject } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 
 type Props = {
   type: string,
   session: SessionInterface,
+  project?: ProjectInterface
 }
 
-function ProjectForm({ type, session }: Props) {
+function ProjectForm({ type, session, project }: Props) {
   const router = useRouter();
+
+  const [isSubmitting, setisSubmitting] = useState(false);
+  const [form, setform] = useState(
+    {
+      title: project?.title || '',
+      description: project?.description || '',
+      image: project?.image || '',
+      liveSiteUrl: project?.liveSiteUrl || '',
+      githubUrl: project?.githubUrl || '',
+      category: project?.category || '',
+    }
+  );
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,8 +38,10 @@ function ProjectForm({ type, session }: Props) {
 
     const { token } = await fetchToken();
 
-    try {
-      if (type === 'create') {
+    try 
+    {
+      if (type === 'create') 
+      {
         console.log("USER ID: " + session?.user?.id);
         console.log("TOKENITO: " + token);
         await createNewProject(form, session?.user?.id, token);
@@ -34,46 +49,55 @@ function ProjectForm({ type, session }: Props) {
         router.push('/');
         router.refresh();
       }
-    } catch (error) {
+
+      if(type === 'edit')
+      {
+        await updateProject(form, project?.id as string, token);
+
+        router.push('/');
+        router.refresh();
+        
+      }
+    } catch (error) 
+    {
       console.log(error);
-    } finally {
+      alert(`Failed to ${type === "create" ? "create" : "edit"} a project. Try again!`);
+    } finally 
+    {
       setisSubmitting(false);
     }
   };
 
 
-  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => 
+  {
     e.preventDefault(); // avoid reload on the page
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.includes('image')) {
+    if (!file.type.includes('image')) 
+    {
       return alert('Please update an image file!');
     }
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => {
+    reader.onload = () => 
+    {
       const result = reader.result as string;
       handleStateChange('image', result);
     };
   };
 
-  const handleStateChange: any = (fieldName: string, value: string) => {
-    setform((prevState) => ({
+  const handleStateChange: any = (fieldName: string, value: string) => 
+  {
+    setform((prevState) => 
+    ({
       ...prevState, [fieldName]: value
     }));
   };
 
-  const [isSubmitting, setisSubmitting] = useState(false);
-  const [form, setform] = useState({
-    title: '',
-    description: '',
-    image: '',
-    liveSiteUrl: '',
-    githubUrl: '',
-    category: '',
-  });
+  
 
   return (
     <form

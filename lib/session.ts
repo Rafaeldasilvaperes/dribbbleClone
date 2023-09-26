@@ -9,7 +9,8 @@ import { JWT } from 'next-auth/jwt'
 import { SessionInterface, UserProfile } from "@/common.types";
 import { createUser, getUser } from "./actions";
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = 
+{
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -80,6 +81,8 @@ export const authOptions: NextAuthOptions = {
 
 export async function getCurrentUser(){
   const session = await getServerSession(authOptions) as SessionInterface;
+
+  console.log(session)
 
   return session;
 }
