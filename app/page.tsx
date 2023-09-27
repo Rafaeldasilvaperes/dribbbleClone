@@ -1,5 +1,6 @@
 import { ProjectInterface } from "@/common.types";
 import Categories from "@/components/Categories";
+import Pagination from "@/components/Pagination";
 import ProjectCard from "@/components/ProjectCard";
 import { fetchAllProjects } from "@/lib/actions";
 
@@ -17,27 +18,34 @@ type ProjectSearch = {
 
 type SearchParams = {
   category?: string;
+  endcursor?: string;
 }
 
 type Props = {
   searchParams: SearchParams
 }
 
-const Home = async ({ searchParams: { category }}: Props) => {
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
+export const revalidate = 0;
 
-  const data = await fetchAllProjects(category) as ProjectSearch;
+
+const Home = async ({ searchParams: { category, endcursor }}: Props) => {
+
+  const data = await fetchAllProjects(category,endcursor) as ProjectSearch;
   const projectsToDisplay = data?.projectSearch?.edges || [];
 
   // If no project
   if(projectsToDisplay.length === 0){
     return (
       <section className="flexStart flex-col paddings">
-        Categories
+        <Categories />
         <p className="no-result-text text-center">No projects found, go create some first!</p>
       </section>
     )
   }
 
+  const loadMore = data?.projectSearch?.pageInfo;
   // else, hence projects
   return(
     <section className="flex-start flex-col paddings mb-16">
@@ -55,7 +63,13 @@ const Home = async ({ searchParams: { category }}: Props) => {
           />
         ))}
       </section>
-      <h1>LoadMore</h1>      
+
+      <Pagination 
+        startCursor={loadMore.startCursor}
+        endCursor={loadMore.endCursor}
+        hasPreviousPage={loadMore.hasPreviousPage}
+        hasNextPage={loadMore.hasNextPage}
+      />      
     </section>
   )
 }
